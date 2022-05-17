@@ -1,12 +1,11 @@
 using FoodDeliveryData.Models;
+using FoodService.GraphQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using UserService.GraphQL;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var conString = builder.Configuration.GetConnectionString("MyDatabase");
 builder.Services.AddDbContext<FoodDeliveringContext>(options =>
      options.UseSqlServer(conString));
@@ -37,11 +36,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
 
     });
-
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("allowOrigin", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-//});
 
 var app = builder.Build();
 
