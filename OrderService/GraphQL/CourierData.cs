@@ -1,0 +1,8 @@
+﻿namespace OrderService.GraphQL
+{
+    public class CourierData
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; }
+    };
+}

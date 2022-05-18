@@ -2,7 +2,7 @@
 {
     public record OrderInput
     (
-        int FoodId,
-        int Quantity
+        int CourierId,
+        List<ListOrderDetails> ListOrderDetails
     );
 }

@@ -7,6 +7,7 @@ namespace FoodDeliveryData.Models
     {
         public User()
         {
+            Couriers = new HashSet<Courier>();
             Orders = new HashSet<Order>();
             Profiles = new HashSet<Profile>();
             UserRoles = new HashSet<UserRole>();
@@ -21,6 +22,7 @@ namespace FoodDeliveryData.Models
         public bool IsVerif { get; set; }
         public bool IsDeleted { get; set; }
 
+        public virtual ICollection<Courier> Couriers { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Profile> Profiles { get; set; }
         public virtual ICollection<UserRole> UserRoles { get; set; }

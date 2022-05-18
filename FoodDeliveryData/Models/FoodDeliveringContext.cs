@@ -16,8 +16,10 @@ namespace FoodDeliveryData.Models
         {
         }
 
+        public virtual DbSet<Courier> Couriers { get; set; } = null!;
         public virtual DbSet<Food> Foods { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderTracking> OrderTrackings { get; set; } = null!;
         public virtual DbSet<Profile> Profiles { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
@@ -35,6 +37,17 @@ namespace FoodDeliveryData.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Courier>(entity =>
+            {
+                entity.ToTable("Courier");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Couriers)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Courier_User");
+            });
+
             modelBuilder.Entity<Food>(entity =>
             {
                 entity.ToTable("Food");
@@ -50,17 +63,34 @@ namespace FoodDeliveryData.Models
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
-                entity.HasOne(d => d.Food)
+                entity.HasOne(d => d.Courier)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.FoodId)
+                    .HasForeignKey(d => d.CourierId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_Food");
+                    .HasConstraintName("FK_Order_Courier");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_User");
+            });
+
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.ToTable("OrderDetail");
+
+                entity.HasOne(d => d.Food)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.FoodId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Food");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Order");
             });
 
             modelBuilder.Entity<OrderTracking>(entity =>

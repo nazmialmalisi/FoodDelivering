@@ -1,5 +1,6 @@
 ﻿using FoodDeliveryData.Models;
 using HotChocolate.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -66,7 +67,6 @@ namespace UserService.GraphQL
                 Messagee = "Berhasil Membuat User"
             });
         }
-
         public async Task<UserToken> LoginAsync(LoginUser input, [Service] IOptions<TokenSettings> tokenSettings, [Service] FoodDeliveringContext context)
         {
             var user = context.Users.Where(o => o.Username == input.Username && o.IsDeleted == false).FirstOrDefault();
@@ -89,7 +89,7 @@ namespace UserService.GraphQL
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.Name, user.Username));
 
-                var userRoles = context.UserRoles.Where(o => o.Id == user.Id).ToList();
+                var userRoles = context.UserRoles.Where(o => o.UserId == user.Id).ToList();
                 foreach (var userRole in userRoles)
                 {
                     var role = context.Roles.Where(o => o.Id == userRole.RoleId).FirstOrDefault();
@@ -116,7 +116,6 @@ namespace UserService.GraphQL
 
             return await Task.FromResult(new UserToken(null, null, Message: "Username or password was invalid"));
         }
-
         public async Task<string> ChangePassword(ChangePassword input, [Service] FoodDeliveringContext context)
         {
             var user = context.Users.Where(u=>u.Username == input.Username && u.IsDeleted == false).FirstOrDefault();
@@ -129,7 +128,6 @@ namespace UserService.GraphQL
 
             return "Berhasil Update Password";
         }
-
         [Authorize(Roles = new[] { "ADMIN" })]
         public async Task<string> VerifikasiUser(string username, [Service] FoodDeliveringContext context)
         {
@@ -137,10 +135,28 @@ namespace UserService.GraphQL
 
             if (user == null) return "User Tidak Ada!";
 
-            user.IsVerif = true;
-            context.Users.Update(user);
-            await context.SaveChangesAsync();
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                user.IsVerif = true;
+                context.Users.Update(user);
+                if (user.Role == "COURIER")
+                {
+                    Courier courier = new Courier
+                    {
+                        UserId = user.Id,
+                    };
+                    context.Couriers.Add(courier);
+                }
+                context.SaveChanges();
 
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                return ex.Message.ToString();
+            }
             return "Berhasil Verifikasi User";
         }
         [Authorize]
@@ -157,11 +173,41 @@ namespace UserService.GraphQL
             profile.FullName = input.FullName;
             profile.Address = input.Address;
             profile.Phone = input.Phone;
-
             context.Profiles.Update(profile);
+            user.FullName = input.FullName;
+            context.Users.Update(user);
+
             await context.SaveChangesAsync();
 
             return input;
+        }
+        [Authorize(Roles = new[] { "ADMIN" })]
+        public async Task<string> DeleteUser(int id, [Service] FoodDeliveringContext context)
+        {
+            var user = context.Users.FirstOrDefault(u => u.Id == id && u.IsDeleted == false);
+            if (user == null) return "Data User Tidak Ada!";
+
+            user.IsDeleted = true;
+            context.Users.Update(user);
+
+            await context.SaveChangesAsync();
+
+            return "Berhasil Delete Data User!";
+        }
+        [Authorize(Roles = new[] { "MANAGER" })]
+        public async Task<string> DeleteCourier(int id, [Service] FoodDeliveringContext context)
+        {
+            var courier = context.Users.
+                FirstOrDefault(o=>o.Id == id && o.Role == "COURIER" && o.IsDeleted == false);
+
+            if (courier == null) return "Data Courier Tidak Ada!";
+
+            courier.IsDeleted = true;
+            context.Users.Update(courier);
+
+            await context.SaveChangesAsync();
+
+            return "Berhasil Delete Data Courier";
         }
     }
 }

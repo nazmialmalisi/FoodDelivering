@@ -31,7 +31,6 @@ namespace UserService.GraphQL
 
             return new List<User>().AsQueryable();
         }
-
         [Authorize]
         public IQueryable<Profile> GetProfiles([Service] FoodDeliveringContext context, ClaimsPrincipal claimsPrincipal)
         {
