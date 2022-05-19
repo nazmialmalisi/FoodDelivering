@@ -16,7 +16,12 @@ namespace OrderService.GraphQL
             try
             {
                 var user = context.Users.Where(u => u.Username == userName).FirstOrDefault();
-
+                var courier = context.Couriers.Where(u => u.Id == input.CourierId).FirstOrDefault();
+                if (courier == null) return new OrderOutput
+                {
+                    TransactionDate = DateTime.Now.ToString(),
+                    Message = "Courier Tidak Ada!"
+                };
                 if (user != null)
                 {
                     Order order = new Order

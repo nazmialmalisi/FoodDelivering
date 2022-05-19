@@ -7,7 +7,7 @@ namespace OrderService.GraphQL
 {
     public class Query
     {
-        [Authorize]
+        [Authorize(Roles = new[] { "MANAGER" , "BUYER" })]
         public IQueryable<Order> GetOrders([Service] FoodDeliveringContext context, ClaimsPrincipal claimsPrincipal)
         {
             var userName = claimsPrincipal.Identity.Name;
