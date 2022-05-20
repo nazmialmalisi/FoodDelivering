@@ -1,0 +1,4 @@
+INSERT INTO Role values('ADMIN')
+INSERT INTO Role values('MANAGER')
+INSERT INTO Role values('BUYER')
+INSERT INTO Role values('COURIER')

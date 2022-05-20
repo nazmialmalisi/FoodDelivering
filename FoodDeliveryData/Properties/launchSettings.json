@@ -3,18 +3,18 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:11105",
-      "sslPort": 44315
+      "applicationUrl": "http://localhost:30870",
+      "sslPort": 44345
     }
   },
   "profiles": {
-    "FoodService": {
+    "FoodDeliveryData": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:7046;http://localhost:5046",
+      "applicationUrl": "https://localhost:7138;http://localhost:5138",
       "dotnetRunMessages": true
     },
     "IIS Express": {

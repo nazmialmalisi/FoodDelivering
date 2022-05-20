@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  userservice:
+    image: ${DOCKER_REGISTRY-}userservice
+    build:
+      context: .
+      dockerfile: FoodDelivering/Dockerfile
+
+  orderservice:
+    image: ${DOCKER_REGISTRY-}orderservice
+    build:
+      context: .
+      dockerfile: OrderService/Dockerfile
+
+
+  foodservice:
+    image: ${DOCKER_REGISTRY-}foodservice
+    build:
+      context: .
+      dockerfile: FoodService/Dockerfile
+
+
+  fooddeliverydata:
+    image: ${DOCKER_REGISTRY-}fooddeliverydata
+    build:
+      context: .
+      dockerfile: FoodDeliveryData/Dockerfile
+
+  mssqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-CU15-ubuntu-20.04
+    ports:
+        - 1433:1433
+    environment:
+        SA_PASSWORD: 'Nazmi@123'
+        ACCEPT_EULA: 'Y'   

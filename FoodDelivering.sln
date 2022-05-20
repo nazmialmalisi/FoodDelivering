@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "FoodDeliveri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodDeliveryData", "FoodDeliveryData\FoodDeliveryData.csproj", "{5B803139-63CA-4AD7-A1F1-2659D1A03DE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoodService", "FoodService\FoodService.csproj", "{F03C990E-19AE-4E16-9D6C-54BBFD2DF5A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodService", "FoodService\FoodService.csproj", "{F03C990E-19AE-4E16-9D6C-54BBFD2DF5A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService", "OrderService\OrderService.csproj", "{D5A730FF-2509-4A5E-AED4-43557A065ADE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService", "OrderService\OrderService.csproj", "{D5A730FF-2509-4A5E-AED4-43557A065ADE}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{78E0CC01-1B97-46E9-AECB-84B878651898}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D5A730FF-2509-4A5E-AED4-43557A065ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A730FF-2509-4A5E-AED4-43557A065ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5A730FF-2509-4A5E-AED4-43557A065ADE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E0CC01-1B97-46E9-AECB-84B878651898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E0CC01-1B97-46E9-AECB-84B878651898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E0CC01-1B97-46E9-AECB-84B878651898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E0CC01-1B97-46E9-AECB-84B878651898}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
