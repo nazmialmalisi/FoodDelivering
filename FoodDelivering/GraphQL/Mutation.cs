@@ -116,12 +116,18 @@ namespace UserService.GraphQL
 
             return await Task.FromResult(new UserToken(null, null, Message: "Username or password was invalid"));
         }
-        public async Task<string> ChangePassword(ChangePassword input, [Service] FoodDeliveringContext context)
+        [Authorize]
+        public async Task<string> ChangePassword(ChangePassword input, [Service] FoodDeliveringContext context, ClaimsPrincipal claimsPrincipal)
         {
-            var user = context.Users.Where(u=>u.Username == input.Username && u.IsDeleted == false).FirstOrDefault();
+            var username = claimsPrincipal.Identity.Name;
+
+            var user = context.Users.Where(u=>u.Username == username && u.IsDeleted == false).FirstOrDefault();
             
             if (user == null) return "User Tidak Ada!";
-
+            
+            bool valid = BCrypt.Net.BCrypt.Verify(input.OldPassword, user.Password);
+            if(!valid) return "Password Tidak Cocok";
+            
             user.Password = BCrypt.Net.BCrypt.HashPassword(input.NewPassword); //Encrypt password
             context.Update(user);
             await context.SaveChangesAsync();

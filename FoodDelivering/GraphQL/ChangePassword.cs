@@ -2,7 +2,7 @@
 {
     public record ChangePassword
     (
-        string Username,
+        string OldPassword,
         string NewPassword
     );
 }
